@@ -3,8 +3,10 @@
 # Usage
 ```sh
 docker pull nerdzeu/docker
-docker run nerdzeu/docker
+docker run -i -t -d -P nerdzeu/docker
 ```
+
+Than look the output of `iptables -L` and edit `/etc/hosts` according to your container IP. Add the line `local.nerdz.eu <ip>`
 
 # Develop
 
@@ -33,4 +35,4 @@ location / {
 }
 ```
 
-Start dnsmasq and nginx. Edit `/etc/hosts` according to your container IP.
+Start dnsmasq and nginx.
