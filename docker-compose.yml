@@ -1,0 +1,24 @@
+db:
+    image: postgres
+    ports:
+        - "5432"
+
+env:
+    build: nerdz-env
+    ports:
+        - "9000"
+    links:
+        - db
+    volumes:
+        - nerdz-env/env:/srv/http
+
+nginx:
+    build: nerdz-nginx
+    ports:
+        - "80:80"
+        - "443;443"
+    links:
+        - env
+    volumes:
+        - nerdz-nginx/conf:/etc/nginx
+        - nerdz-env/env:/srv/http

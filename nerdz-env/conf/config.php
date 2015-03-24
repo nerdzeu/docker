@@ -8,7 +8,7 @@ class Variables
     public static $data = [
         // Database configuration
         // PostgreSQL hostname
-        'POSTGRESQL_HOST'        => 'localhost',
+        'POSTGRESQL_HOST'        => 'db',
         // PostgreSQL port
         'POSTGRESQL_PORT'        => '5432',
         // PostgreSQL database/scheme name
@@ -47,13 +47,13 @@ class Variables
         // Domain configuration
         // Your NERDZ hostname. If you are running NERDZ on your
         // PC, use 'localhost'. Do NOT put the protocol (http/https).
-        'SITE_HOST'              => 'local.nerdz.eu',
+        'SITE_HOST'              => 'primary.nerdz.eu',
         // The domain used to serve static data. If you are running
         // NERDZ on your PC, put an empty string.
         'STATIC_DOMAIN'          => '',
         // The domain for the mobile version
         // The rules defined above also apply in this case
-        'MOBILE_HOST'            => 'mobile.local.nerdz.eu',
+        'MOBILE_HOST'            => 'mobile.primary.nerdz.eu',
 
         // Minification configuration
         // NERDZ uses an automatic template minification system, this
@@ -83,6 +83,6 @@ class Variables
         'PUSHED_PORT'            => 5667,
         'CAMO_KEY'               => '',
         'LOGIN_SSL_ONLY'         => false,
-        'HTTPS_DOMAIN'          => 'local.nerdz.eu'
+        'HTTPS_DOMAIN'          => 'primary.nerdz.eu'
     ];
 }

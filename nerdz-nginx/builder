@@ -26,3 +26,5 @@ cd nginx-1.6.2
     --with-ld-opt='-Wl,-E'
 
 make && make install
+cd ..
+rm -rf nginx-1.6.2*
