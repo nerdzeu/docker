@@ -3,6 +3,6 @@
 # Usage
 ```sh
 git clone https://github.com/nerdzeu/docker
-cd clone
+cd docker
 docker-compose up -d
 ```
