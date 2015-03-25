@@ -9,7 +9,7 @@ RUN sed -i -e 's#https://mirrors\.kernel\.org#http://mirror.clibre.uqam.ca#g' /e
        php-composer \
        php-apcu \
        wget \
-       git go subversion --noconfirm
+       git --noconfirm
 
 COPY conf/php-fpm.conf /etc/php/
 COPY conf/php.ini /etc/php/
@@ -17,7 +17,7 @@ RUN echo "extension=apcu.so" >  /etc/php/conf.d/apcu.ini
 
 EXPOSE 9000
 
-VOLUME /var/www
+VOLUME /srv/http
 
 COPY startup.sh /opt/
 

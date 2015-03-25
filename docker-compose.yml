@@ -3,22 +3,22 @@ db:
     ports:
         - "5432"
 
-env:
-    build: nerdz-env
+php:
+    build: php
     ports:
         - "9000"
     links:
         - db
     volumes:
-        - nerdz-env/env:/srv/http
+        - php/env:/srv/http
 
 nginx:
-    build: nerdz-nginx
+    build: nginx
     ports:
         - "80:80"
         - "443:443"
     links:
-        - env
+        - php
     volumes:
-        - nerdz-nginx/conf:/etc/nginx
-        - nerdz-env/env:/srv/http
+        - nginx/conf:/etc/nginx
+        - php/env:/srv/http
