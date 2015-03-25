@@ -9,7 +9,8 @@ RUN sed -i -e 's#https://mirrors\.kernel\.org#http://mirror.clibre.uqam.ca#g' /e
        php-composer \
        php-apcu \
        wget \
-       git --noconfirm
+       git nodejs --noconfirm
+RUN npm install uglify-js -g
 
 COPY conf/php-fpm.conf /etc/php/
 COPY conf/php.ini /etc/php/
