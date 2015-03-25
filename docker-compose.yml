@@ -1,14 +1,19 @@
-db:
+postgres:
     image: postgres
     ports:
         - "5432"
+redis:
+    image: redis
+    ports:
+        - "6379"
 
 php:
     build: php
     ports:
         - "9000"
     links:
-        - db
+        - postgres
+        - redis
     volumes:
         - php/env:/srv/http
 

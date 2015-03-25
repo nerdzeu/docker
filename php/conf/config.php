@@ -8,7 +8,7 @@ class Variables
     public static $data = [
         // Database configuration
         // PostgreSQL hostname
-        'POSTGRESQL_HOST'        => 'db',
+        'POSTGRESQL_HOST'        => 'postgres',
         // PostgreSQL port
         'POSTGRESQL_PORT'        => '5432',
         // PostgreSQL database/scheme name
@@ -33,9 +33,9 @@ class Variables
 
         // Mail configuration
         // SMTP server username
-        'SMTP_SERVER'            => 'smtp.gmail,com',
+        'SMTP_SERVER'            => 'smtp.gmail.com',
         // SMTP server port
-        'SMTP_PORT'              => '465',
+        'SMTP_PORT'              => '587',
         // SMTP server username
         'SMTP_USER'              => 'WILLNOWORK',
         // SMTP server password
@@ -50,7 +50,7 @@ class Variables
         'SITE_HOST'              => 'primary.nerdz.eu',
         // The domain used to serve static data. If you are running
         // NERDZ on your PC, put an empty string.
-        'STATIC_DOMAIN'          => '',
+        'STATIC_DOMAIN'          => 'static.primary.nerdz.eu',
         // The domain for the mobile version
         // The rules defined above also apply in this case
         'MOBILE_HOST'            => 'mobile.primary.nerdz.eu',
@@ -67,7 +67,7 @@ class Variables
         // %path% will be replaced with the file to be minified.
         // Comment these options if the default commands are okay for you.
         //'MINIFICATION_CSS_CMD' => 'something-css %path%',
-        'MINIFICATION_JS_CMD'  => 'cat  %path%',
+        //'MINIFICATION_JS_CMD'  => 'cat  %path%',
 
         // Misc configuration
         // True if you want to enable Redis session sharing. Disable it
