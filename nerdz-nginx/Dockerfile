@@ -11,4 +11,4 @@ VOLUME ["/etc/nginx", "/srv/http"]
 
 EXPOSE 80 443
 
-ENTRYPOINT chown -R http:http /srv/http && /usr/bin/nginx
+ENTRYPOINT /usr/bin/nginx -g 'daemon off;'
