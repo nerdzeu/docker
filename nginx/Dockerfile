@@ -7,8 +7,12 @@ RUN sed -i -e 's#https://mirrors\.kernel\.org#http://mirror.clibre.uqam.ca#g' /e
 COPY builder /opt/
 RUN bash /opt/builder
 
-VOLUME ["/etc/nginx", "/srv/http"]
+# forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
+
+VOLUME ["/var/cache/nginx"]
 
 EXPOSE 80 443
 
-ENTRYPOINT /usr/bin/nginx -g 'daemon off;'
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

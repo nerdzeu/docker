@@ -2,6 +2,7 @@ postgres:
     image: postgres
     ports:
         - "5432"
+
 redis:
     image: redis
     ports:
@@ -24,6 +25,7 @@ nginx:
         - "443:443"
     links:
         - php
+    volumes_from:
+        - php
     volumes:
         - nginx/conf:/etc/nginx
-        - php/env:/srv/http
