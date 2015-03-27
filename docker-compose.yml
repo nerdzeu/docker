@@ -21,7 +21,7 @@ php:
         - php/env:/srv/http
 
 nginx:
-    image: nerdzeu/nginx
+    image: nerdzeu/docker-nginx
     ports:
         - "80:80"
         - "443:443"
