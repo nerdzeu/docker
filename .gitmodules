@@ -1,0 +1,6 @@
+[submodule "nginx"]
+	path = nginx
+	url = https://github.com/nerdzeu/docker-nginx
+[submodule "php"]
+	path = php
+	url = https://github.com/nerdzeu/docker-php
