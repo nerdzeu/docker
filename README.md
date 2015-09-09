@@ -22,7 +22,7 @@ cd docker
 
 On Debian you have the `/etc/nginx/sites-enabled/` folder where to put nginx-reverse-proxy.
 
-``sh
+```sh
 cp nginx-reverse-proxy /etc/nginx/sites-enabled/<yourhost>
 ```
 
