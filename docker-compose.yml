@@ -5,26 +5,21 @@ postgres:
     volumes:
         - postgres/data:/var/lib/postgresql/data
 
-redis:
-    image: redis
-    ports:
-        - "6379"
-
 php:
     image: nerdzeu/docker-php
     ports:
         - "9000"
     links:
         - postgres
-        - redis
     volumes:
         - php/env:/srv/http
+        - php/conf:/etc/php
 
 nginx:
     image: nerdzeu/docker-nginx
     ports:
-        - "80:80"
-        - "443:443"
+        - "2337:80"
+        - "2338:443"
     links:
         - php
     volumes_from:
