@@ -42,6 +42,8 @@ Otherwhise you can read the locks running `docker-composer logs`
 
 When the installation is complete (see the logs of the docker_php container, when php-fpm started the setup is completed correctly).
 
-Now you _MUST_ edit `docker/php/env/class/config/index.php` changing SITE_HOST to <yourhost> (otherwise referrer control won't let you do anything).
+Now you _MUST_ edit `docker/php/env/class/config/index.php` changing SITE_HOST to $yourhost-configured-on-nginx. (otherwise referrer control won't let you do anything).
+
+Hint: set STATIC_DOMAIN to ''.
 
 If you want you want (or need), you can change every other _HOST contants.
