@@ -27,6 +27,10 @@ server {
 
 	server_name yourhost;
 
+        ssl on;
+        ssl_certificate /etc/nginx/ssl/nerdz.crt;
+        ssl_certificate_key /etc/nginx/ssl/nerdz.key;
+
 	real_ip_header    X-Real-IP;
 	real_ip_recursive on;
 	client_max_body_size 50M;

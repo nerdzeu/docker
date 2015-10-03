@@ -41,6 +41,20 @@ cp nginx-reverse-proxy.custom /etc/nginx/sites-enabled/<yourhost>
 
 On other distros you should put the configuration file where nginx can found it.
 
+To enable SSL, you have to perform the following step:
+
+```sh
+# if you're using a different folder, you may want
+# to update the ssl_certificate_* paths
+#vim /etc/nginx/sites-enabled/<yourhost>
+mkdir /etc/nginx/ssl
+cp nginx/conf/certs/nerdz.* /etc/nginx/ssl/
+```
+In case you don't want SSL, or you already have your own SSL certificates, modify
+every `ssl_certificate` directive with the path to your own SSL certs.
+
+(Note: in a future commit, `autosetup.sh` take care of that too)
+
 After you only have to run docker-composer (it can take a long time if your internet connection is slow).
 
 ```sh
