@@ -1,1 +1,3 @@
 postgres/data
+nginx-reverse-proxy.custom
+nerdz_venv/
