@@ -27,3 +27,11 @@ nginx:
     volumes:
         - ./nginx/conf:/etc/nginx
 
+camo:
+    image: nerdzeu/docker-camo
+    ports:
+        - "8081:8081"
+    links:
+        - php
+    volumes:
+        - ./camo:/home/camo

@@ -4,3 +4,6 @@
 [submodule "php"]
 	path = php
 	url = https://github.com/nerdzeu/docker-php
+[submodule "camo"]
+	path = camo
+	url = https://github.com/nerdzeu/docker-camo
