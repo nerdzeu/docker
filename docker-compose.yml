@@ -29,9 +29,10 @@ nginx:
 
 camo:
     image: nerdzeu/docker-camo
+    #build: ./camo
     ports:
         - "8081:8081"
     links:
-        - php
+        - nginx
     volumes:
         - ./camo:/home/camo
