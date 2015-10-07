@@ -19,6 +19,9 @@ Enter into the repo (docker) folder.
 ```sh
 cd docker
 ```
+
+## nginx configuration
+
 Now, execute
 
 ```sh
@@ -26,7 +29,6 @@ Now, execute
 ```
 
 `autosetup.sh` will
-
 * automagically create a virtualenv and install docker-compose from the cheese shop (PyPI)
 * create `nginx-reverse-proxy.custom`, which is an ad-hoc modified nginx-reverse-proxy with `<yourhost>` as `server_name`.
 
@@ -41,6 +43,8 @@ cp nginx-reverse-proxy.custom /etc/nginx/sites-enabled/<yourhost>
 
 On other distros you should put the configuration file where nginx can found it.
 
+### Enable SSL on nginx
+
 To enable SSL, you have to perform the following step:
 
 ```sh
@@ -53,7 +57,11 @@ cp nginx/conf/certs/nerdz.* /etc/nginx/ssl/
 In case you don't want SSL, or you already have your own SSL certificates, modify
 every `ssl_certificate` directive with the path to your own SSL certs.
 
-(Note: in a future commit, `autosetup.sh` take care of that too)
+### Apply your modifications to nginx
+
+Now, you can restart your nginx istance. On debian, just run `service nginx restart`. On other platforms, consult your system' man page.
+
+## docker configuration
 
 After you only have to run docker-composer (it can take a long time if your internet connection is slow).
 
@@ -63,12 +71,51 @@ docker-compose up -d
 
 If you don't want to run the container in detached mode, remove the `-d` (you'll see logs).
 
-Otherwhise you can read the logs running `docker-composer logs`
+Otherwhise you can read the logs running `docker-compose logs`
 
-When the installation is complete (see the logs of the docker_php container, when php-fpm started the setup is completed correctly).
+When the installation is complete (see the logs of the docker_php container, when php-fpm started the setup is completed correctly), stop it with `ctrl-c` or `docker-compose stop`.  
+You are now ready for a new round of configuration.
 
-Now you _MUST_ edit `docker/php/env/class/config/index.php` changing SITE_HOST to $yourhost-configured-on-nginx. (otherwise referrer control won't let you do anything).
+## camo configuration
 
-Hint: set STATIC_DOMAIN to ''.
+[Camo](https://github.com/atmos/camo) is a nice proxy to serve HTTP images on HTTPS.  
+It can be configured by environment variables, and they're read from `camo/env` file.
+An example follows.
+```sh
+#put these in a file called `env` inside the camo submodule. 
+export PORT=8081
+export CAMO_KEY=<camokey>
+```
 
-If you want (or need), you can change every other \_HOST contants.
+## Nerdz site configuration
+
+Now you _MUST_ edit `docker/php/env/nerdz.eu/class/config/index.php`:
+
+* change `SITE_HOST` to `$yourhost-configured-on-nginx`   
+  (otherwise referrer control won't let you do anything).
+* change `CAMO_KEY` to `$camokey-configured-in-camo`
+
+If you want (or need), you can change every other \_HOST contants. Please note that, if you did not set up a DNS entry for `STATIC_DOMAIN`, you may want to set it to `''`. If you did it, instead, you may want to set it as `'//static.<yourhost>'`: it will avoid some headaches later.
+
+## Start docker again
+
+Run `docker-compose` again.
+
+```sh
+docker-compose up -d
+```
+
+Now, your system should be up and running. Enjoy your shiny Nerdz installation!
+
+# Troubleshooting
+
+* _Everything went kaboom!_  
+Please get out of Iran and try again.
+
+* _CSS and stuff is not loaded!_  
+Did you try to setup STATIC_DOMAIN to `''` or `'//static.<yourhost>'`?
+
+* _My problem is not listed here!_  
+Please, open an issue in the project issue tracker: we'll be more than happy to help you. In case you did find a solution and want to make it available to others, please modify the README and open a PR.
+
+
