@@ -5,7 +5,8 @@
 echo "installing docker-compose in a virtualenv..."
 virtualenv nerdz_venv
 source nerdz_venv/bin/activate
-pip install docker-compose
+pip uninstall docker-compose
+pip install git+https://github.com/docker/compose.git
 
 #replace server_name in nginx-reverse-proxy with your server
 echo "putting your hostname ($1) into nginx-reverse-proxy"
