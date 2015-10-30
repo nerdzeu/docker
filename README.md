@@ -65,6 +65,15 @@ Now, you can restart your nginx istance. On debian, just run `service nginx rest
 
 After you only have to run docker-composer (it can take a long time if your internet connection is slow).
 
+Since we're using virtual env, you first have to
+
+```sh
+cd nerdz_venv
+source bin/activate
+```
+
+Than you can run docker-compose
+
 ```sh
 docker-compose up -d
 ```
