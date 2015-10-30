@@ -7,3 +7,6 @@
 [submodule "camo"]
 	path = camo
 	url = https://github.com/nerdzeu/docker-camo
+[submodule "nerdzcrush"]
+	path = nerdzcrush
+	url = https://github.com/nerdzeu/docker-NERDZCrush.git

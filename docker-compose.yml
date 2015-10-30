@@ -36,3 +36,21 @@ camo:
         - nginx
     volumes:
         - ./camo:/home/camo
+
+redis:
+    image: redis
+    expose:
+        - "6379"
+    volumes:
+        - ./redis:/data
+
+nerdzcrush:
+    image: nerdzeu/docker-nerdzcrush
+    #build: .
+    ports:
+        - "8181:81"
+    links:
+        - redis
+    volumes:
+        - ./mediacrush:/home/mediacrush
+
