@@ -2,15 +2,26 @@
 
 #install docker-compose via pip
 
-echo "installing docker-compose in a virtualenv..."
+if [ $# -lt 1 ]; then
+    echo "$0 <yourhost>"
+    exit 1
+fi
+
+echo "[+] Installing docker-compose in a virtualenv..."
 virtualenv nerdz_venv
 source nerdz_venv/bin/activate
-pip uninstall docker-compose
 pip install git+https://github.com/docker/compose.git
 
 #replace server_name in nginx-reverse-proxy with your server
-echo "putting your hostname ($1) into nginx-reverse-proxy"
+echo "[+] Putting your hostname ($1) into nginx-reverse-proxy.custom"
 cat nginx-reverse-proxy | sed "s/yourhost/$1/g" > nginx-reverse-proxy.custom
+echo "[+] creating nerdz.service.custom file"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cat nerdz.service | sed "s/auto-replace-me/$DIR/g" > nerdz.service.custom
+
+echo "[+] Done."
+echo 
+echo "Now you have to follow the README. Thus configure the php backend, camo and nerdzcrush"
 
 #automatically copy nginx-reverse-proxy.custom and certs to the right folders
 #echo "next steps will require sudo as nginx folder is owned by root (somehow)"
@@ -20,3 +31,6 @@ cat nginx-reverse-proxy | sed "s/yourhost/$1/g" > nginx-reverse-proxy.custom
 #sudo mkdir -p /etc/nginx/ssl
 #sudo cp nginx/conf/certs/nerdz.* /etc/nginx/ssl
 
+#put nerdz.service.custom in /lib/systemd/system/
+#sudo cp nerdz.service.custom /lib/systemd/system/
+#sudo systemctl enable nerdz
