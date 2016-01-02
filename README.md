@@ -88,7 +88,7 @@ You are now ready for a new round of configuration.
 ## camo configuration
 
 [Camo](https://github.com/atmos/camo) is a nice proxy to serve HTTP images on HTTPS.  
-It can be configured by environment variables, and they're read from `camo/env` file.
+It can be configured by environment variables, and they're read from `camo/camo/env` file.
 An example follows.
 ```sh
 #put these in a file called `env` inside the camo submodule. 
@@ -98,7 +98,7 @@ export CAMO_KEY=<camokey>
 
 ## Nerdz site configuration
 
-Now you _MUST_ edit `docker/php/env/nerdz.eu/class/config/index.php`:
+Now you _MUST_ edit `php/env/nerdz.eu/class/config/index.php`:
 
 * change `SITE_HOST` to `$yourhost-configured-on-nginx`   
   (otherwise referrer control won't let you do anything).

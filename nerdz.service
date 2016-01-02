@@ -1,0 +1,15 @@
+[Unit]
+Description=NERDZ. A mix Between a forum and a social network
+After=docker.service
+
+[Service]
+Restart=always
+Type=simple
+WorkingDirectory=auto-replace-me
+Environment=VIRTUAL_ENV=/nerdz_venv/
+Environment=PATH=$VIRTUAL_ENV/bin:$PATH
+ExecStart=$VIRTUAL_ENV/bin/docker-compose up --no-recreate
+ExecStop=$VIRTUAL_ENV/bin/docker-compose stop
+
+[Install]
+WantedBy=multi-user.target
