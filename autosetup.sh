@@ -17,7 +17,7 @@ echo "[+] Putting your hostname ($1) into nginx-reverse-proxy.custom"
 cat nginx-reverse-proxy | sed "s/yourhost/$1/g" > nginx-reverse-proxy.custom
 echo "[+] creating nerdz.service.custom file"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cat nerdz.service | sed "s/auto-replace-me/$DIR/g" > nerdz.service.custom
+cat nerdz.service | sed "s#auto-replace-me#$DIR#g" > nerdz.service.custom
 
 echo "[+] Done."
 echo 
@@ -31,6 +31,10 @@ echo "Now you have to follow the README. Thus configure the php backend, camo an
 #sudo mkdir -p /etc/nginx/ssl
 #sudo cp nginx/conf/certs/nerdz.* /etc/nginx/ssl
 
-#put nerdz.service.custom in /lib/systemd/system/
-#sudo cp nerdz.service.custom /lib/systemd/system/
-#sudo systemctl enable nerdz
+echo "[+] Moving custom service to systemd services path"
+sudo cp nerdz.service.custom /lib/systemd/system/nerdz.service
+
+echo
+echo "[+] Enabling nerdz.service"
+sudo systemctl enable nerdz
+echo

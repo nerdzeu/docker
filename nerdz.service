@@ -6,10 +6,8 @@ After=docker.service
 Restart=always
 Type=simple
 WorkingDirectory=auto-replace-me
-Environment=VIRTUAL_ENV=/nerdz_venv/
-Environment=PATH=$VIRTUAL_ENV/bin:$PATH
-ExecStart=$VIRTUAL_ENV/bin/docker-compose up --no-recreate
-ExecStop=$VIRTUAL_ENV/bin/docker-compose stop
+ExecStart=auto-replace-me/nerdz_venv/bin/docker-compose up --no-recreate
+ExecStop=auto-replace-me/nerdz_venv/bin/docker-compose stop
 
 [Install]
 WantedBy=multi-user.target
