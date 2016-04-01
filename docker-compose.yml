@@ -1,54 +1,58 @@
-postgres:
-    image: postgres
-    expose:
-        - "5432"
-    volumes:
-        - ./postgres/data:/var/lib/postgresql/data
+version: '2'
 
-php:
-    image: nerdzeu/docker-php
-    expose:
-        - "9000"
-    links:
-        - postgres
-    volumes:
-        - ./php/env:/srv/http
-        - ./php/conf:/etc/php
+services:
 
-nginx:
-    image: nerdzeu/docker-nginx
-    ports:
-        - "2337:80"
-        - "2338:443"
-    links:
-        - php
-    volumes_from:
-        - php
-    volumes:
-        - ./nginx/conf:/etc/nginx
+    postgres:
+        image: postgres
+        expose:
+            - "5432"
+        volumes:
+            - ./postgres/data:/var/lib/postgresql/data
 
-camo:
-    image: nerdzeu/docker-camo
-    ports:
-        - "8081:8081"
-    links:
-        - nginx
-    volumes:
-        - ./camo/camo:/home/camo
+    php:
+        image: nerdzeu/docker-php
+        expose:
+            - "9000"
+        links:
+            - postgres
+        volumes:
+            - ./php/env:/srv/http
+            - ./php/conf:/etc/php
 
-redis:
-    image: redis
-    expose:
-        - "6379"
-    volumes:
-        - ./nerdzcrush/redis:/data
+    nginx:
+        image: nerdzeu/docker-nginx
+        ports:
+            - "2337:80"
+            - "2338:443"
+        links:
+            - php
+        volumes_from:
+            - php
+        volumes:
+            - ./nginx/conf:/etc/nginx
 
-nerdzcrush:
-    image: nerdzeu/docker-nerdzcrush
-    ports:
-        - "81:9999"
-    links:
-        - redis
-    volumes:
-        - ./nerdzcrush/mediacrush:/home/mediacrush
+    camo:
+        image: nerdzeu/docker-camo
+        ports:
+            - "8081:8081"
+        links:
+            - nginx
+        volumes:
+            - ./camo/camo:/home/camo
+
+    redis:
+        image: redis
+        expose:
+            - "6379"
+        volumes:
+            - ./nerdzcrush/redis:/data
+
+    nerdzcrush:
+        image: nerdzeu/docker-nerdzcrush
+        ports:
+            - "81:9999"
+        links:
+            - redis
+        volumes:
+            - ./nerdzcrush/mediacrush:/home/mediacrush
 

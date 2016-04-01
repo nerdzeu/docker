@@ -10,7 +10,7 @@ fi
 echo "[+] Installing docker-compose in a virtualenv..."
 virtualenv nerdz_venv
 source nerdz_venv/bin/activate
-pip install git+https://github.com/docker/compose.git
+pip install docker-compose==1.6.2
 
 #replace server_name in nginx-reverse-proxy with your server
 echo "[+] Putting your hostname ($1) into nginx-reverse-proxy.custom"
