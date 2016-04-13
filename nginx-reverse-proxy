@@ -167,7 +167,7 @@ server {
         add_header Access-Control-Allow-Origin *;
         add_header Access-Control-Allow-Methods "HEAD, GET, OPTIONS, POST, PUT, DELETE";
         add_header Access-Control-Allow-Headers X-CORS-Status;
-        proxy_pass  http://127.0.0.1:8181;
+        proxy_pass  http://127.0.0.1:9999;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
@@ -184,7 +184,7 @@ server {
         add_header Access-Control-Allow-Methods "HEAD, GET, OPTIONS, POST, PUT, DELETE";
         add_header Access-Control-Allow-Headers X-CORS-Status;
 
-        proxy_pass  http://127.0.0.1:8181;
+        proxy_pass  http://127.0.0.1:9999;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
@@ -197,7 +197,7 @@ server {
 
     location /static {
         gzip on;
-        proxy_pass  http://127.0.0.1:8181;
+        proxy_pass  http://127.0.0.1:9999;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";

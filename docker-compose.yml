@@ -50,7 +50,7 @@ services:
     nerdzcrush:
         image: nerdzeu/docker-nerdzcrush
         ports:
-            - "81:9999"
+            - "9999:9999"
         links:
             - redis
         volumes:
