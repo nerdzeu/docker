@@ -10,3 +10,6 @@
 [submodule "nerdzcrush"]
 	path = nerdzcrush
 	url = https://github.com/nerdzeu/docker-NERDZCrush.git
+[submodule "api"]
+	path = api
+	url = https://github.com/nerdzeu/nerdz-api

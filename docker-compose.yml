@@ -56,3 +56,15 @@ services:
         volumes:
             - ./nerdzcrush/mediacrush:/home/mediacrush
 
+    api:
+        image: nerdzeu/nerdz-api
+        ports:
+            - "2339:8080"
+        links:
+            - postgres
+        volumes_from:
+            - php
+        volumes:
+            - ./api/runtime:/go/runtime
+        environment:
+            - CONF_FILE=/go/runtime/config.json
