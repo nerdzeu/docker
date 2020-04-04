@@ -1,3 +1,4 @@
 postgres/data
 *.custom
-nerdz_venv/
+venv/
+certbot/
