@@ -1,65 +1,82 @@
-version: '2'
+version: '3'
 
 services:
-
     postgres:
-        image: postgres
+        image: postgres:12.2
+        restart: unless-stopped
         expose:
             - "5432"
         volumes:
             - ./postgres/data:/var/lib/postgresql/data
 
     php:
-        image: nerdzeu/docker-php
+        image: nerdzeu/docker-php:1.0.0
+        restart: unless-stopped
         expose:
             - "9000"
         links:
             - postgres
         volumes:
-            - ./php/env:/srv/http
-            - ./php/conf:/etc/php
+            - ./php/nerdz.eu:/var/www/html
 
     nginx:
-        image: nerdzeu/docker-nginx
+        image: nginx:1.16-perl
+        restart: unless-stopped
         ports:
-            - "2337:80"
-            - "2338:443"
+            - "80:80"
+            - "433:433"
         links:
             - php
         volumes_from:
             - php
         volumes:
-            - ./nginx/conf:/etc/nginx
+            - ./nginx/conf.d:/etc/nginx/conf.d
+            - ./certbot/conf:/etc/letsencrypt
+            - ./certbot/www:/var/www/certbot
+        command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
+
+
+    certbot:
+        image: certbot/certbot
+        restart: unless-stopped
+        volumes:
+          - ./certbot/conf:/etc/letsencrypt
+          - ./certbot/www:/var/www/certbot
+        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
     camo:
-        image: nerdzeu/docker-camo
-        ports:
-            - "8081:8081"
+        image: jostyee/camo:latest
+        restart: unless-stopped
+        expose:
+            - "8081"
         links:
             - nginx
         volumes:
-            - ./camo/camo:/home/camo
+            - ./camo/camo:/opt/camo
 
     redis:
-        image: redis
+        image: redis:5.0
+        restart: unless-stopped
         expose:
             - "6379"
         volumes:
             - ./nerdzcrush/redis:/data
 
     nerdzcrush:
-        image: nerdzeu/docker-nerdzcrush
-        ports:
-            - "9999:9999"
+        image: nerdzeu/docker-nerdzcrush:latest
+        restart: unless-stopped
+        expose:
+            - "9999"
         links:
             - redis
         volumes:
             - ./nerdzcrush/mediacrush:/home/mediacrush
 
     api:
-        image: nerdzeu/nerdz-api
-        ports:
-            - "2339:8080"
+        image: nerdzeu/nerdz-api:1.0.0
+        restart: unless-stopped
+        expose:
+            - "8080"
         links:
             - postgres
         volumes_from:
