@@ -55,12 +55,24 @@ else
     # Remove all redirects if https is disabled
     begin_line=$(grep -n "HTTP->HTTPS" nginx/conf.d/nerdz.eu.conf  |cut -d: -f 1)
     end_line=$(wc -l nginx/conf.d/nerdz.eu.conf | awk '{ print $1 }')
-    echo "start $begin_line "
-    echo "end $end_line "
     sed -i -e "$begin_line,$end_line s/^/#/" nginx/conf.d/nerdz.eu.conf
 fi
+
+echo "[+] Configuring nerdzcrush..."
+cp nerdzcrush/mediacrush/MediaCrush/config.ini.sample nerdzcrush/mediacrush/MediaCrush/config.ini
+
+if (( ! $ENABLE_SSL )); then
+    sed -i -e "s/https/http/g" nerdzcrush/mediacrush/MediaCrush/config.ini
+fi
+
+sed -i -e "s/mediacru.sh/media.$DOMAIN/g" nerdzcrush/mediacrush/MediaCrush/config.ini
+sed -i -e "s/redis-ip =.*$/redis-ip = redis/g" nerdzcrush/mediacrush/MediaCrush/config.ini
 
 echo "[+] Creating nerdz.service file in systemd/nerdz.service"
 sed -i -e "s#auto-replace-me#$DIR#g" systemd/nerdz.service
 echo
 echo "Done."
+
+echo "Start the containers with docker-compose up (-d to put it in background)"
+echo "You can also use the systemd/nerdz.service file"
+echo
