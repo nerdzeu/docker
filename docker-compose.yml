@@ -27,8 +27,6 @@ services:
             - "433:433"
         links:
             - php
-        volumes_from:
-            - php
         volumes:
             - ./nginx/conf.d:/etc/nginx/conf.d
             - ./certbot/conf:/etc/letsencrypt
@@ -79,8 +77,6 @@ services:
             - "8080"
         links:
             - postgres
-        volumes_from:
-            - php
         volumes:
             - ./api/runtime:/go/runtime
         environment:
