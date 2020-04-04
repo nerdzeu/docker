@@ -1,0 +1,13 @@
+[Unit]
+Description=NERDZ. A mix Between a forum and a social network
+After=docker.service
+
+[Service]
+Restart=always
+Type=simple
+WorkingDirectory=auto-replace-me
+ExecStart=auto-replace-me/venv/bin/docker-compose up --no-recreate
+ExecStop=auto-replace-me/venv/bin/docker-compose stop
+
+[Install]
+WantedBy=multi-user.target

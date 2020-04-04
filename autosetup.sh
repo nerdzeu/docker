@@ -1,37 +1,34 @@
 #!/usr/bin/env bash
 
-#install docker-compose via pip
-
 if [ $# -lt 1 ]; then
-    echo "$0 <yourhost>"
+    echo "$0 <YOUR_HOST>"
     exit 1
 fi
 
-echo "[+] Installing docker-compose in a virtualenv..."
-virtualenv nerdz_venv
-source nerdz_venv/bin/activate
-pip install docker-compose==1.7.0
+if [ -z ${VIRTUAL_ENV+x} ]; then
+    deactivate
+fi
 
-echo "[+] Putting your hostname ($1) into nginx-reverse-proxy.custom"
-cat nginx-reverse-proxy | sed "s/yourhost/$1/g" > nginx-reverse-proxy.custom
-
-echo "[+] Creating nerdz.service.custom file"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cat nerdz.service | sed "s#auto-replace-me#$DIR#g" > nerdz.service.custom
 
-echo "[+] Moving custom service to systemd services path"
-sudo cp nerdz.service.custom /lib/systemd/system/nerdz.service
+echo "[+] Creating a new virtualenv in ./venv"
+if [ ! -d venv ]; then
+    virtualenv -ppython3.7 venv
+fi
+source venv/bin/activate
 
-echo "[+] Cofiguring PHP container"
-DOCKER_GROUP=$(getent group docker | cut -d: -f3)
-mkdir $DIR/php/env/
-echo $DOCKER_GROUP > $DIR/php/env/DOCKER_GROUP
+echo "[+] Installing docker-compose in a virtualenv..."
+pip install docker-compose==1.25.4
 
-echo "[+] Enabling nerdz.service on boot"
-sudo systemctl enable nerdz
+echo "[+] Putting your hostname ($1) where needed..."
 
-echo "[+] Starting nerdz.service"
-sudo systemctl start nerdz
+grep -rlZ "nerdz.eu" nginx/ | xargs -0 -l sed -i -e "s/nerdz.eu/$1/g"
+sed -i -e "s/nerdz.eu/$1/g" init-letsencrypt.sh
 
-echo "[+] Remember to move the ngnix-reverse-proxy.custom service file to your ngnix configuration folder"
+echo "[+] Certbot configuration..."
+./init-letsencrypt.sh
 
+echo "[+] Creating nerdz.service file in systemd/nerdz.service"
+sed -i -e "s#auto-replace-me#$DIR#g" systemd/nerdz.service
+echo
+echo "Done."
