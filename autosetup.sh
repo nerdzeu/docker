@@ -22,7 +22,7 @@ grep -rlZ "nerdz.eu" nginx/ | xargs -0 -l sed -i -e "s/nerdz.eu/$1/g"
 sed -i -e "s/nerdz.eu/$1/g" init-letsencrypt.sh
 
 echo "[+] Certbot configuration..."
-./init-letsencrypt.sh
+sh init-letsencrypt.sh
 
 echo "[+] Creating nerdz.service file in systemd/nerdz.service"
 sed -i -e "s#auto-replace-me#$DIR#g" systemd/nerdz.service
