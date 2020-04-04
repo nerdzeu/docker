@@ -5,15 +5,11 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-if [ -z ${VIRTUAL_ENV+x} ]; then
-    deactivate
-fi
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo "[+] Creating a new virtualenv in ./venv"
 if [ ! -d venv ]; then
-    virtualenv -ppython3.7 venv
+    virtualenv -ppython3 venv
 fi
 source venv/bin/activate
 
