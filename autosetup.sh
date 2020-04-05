@@ -2,6 +2,33 @@
 
 usage() { echo "Usage: $0 [-s <ssl>] [-e <email>] domain" 1>&2; exit 1; }
 
+# https://stackoverflow.com/a/51789677/2891324
+function parse_yaml {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|,$s\]$s\$|]|" \
+        -e ":1;s|^\($s\)\($w\)$s:$s\[$s\(.*\)$s,$s\(.*\)$s\]|\1\2: [\3]\n\1  - \4|;t1" \
+        -e "s|^\($s\)\($w\)$s:$s\[$s\(.*\)$s\]|\1\2:\n\1  - \3|;p" $1 | \
+   sed -ne "s|,$s}$s\$|}|" \
+        -e ":1;s|^\($s\)-$s{$s\(.*\)$s,$s\($w\)$s:$s\(.*\)$s}|\1- {\2}\n\1  \3: \4|;t1" \
+        -e    "s|^\($s\)-$s{$s\(.*\)$s}|\1-\n\1  \2|;p" | \
+   sed -ne "s|^\($s\):|\1|" \
+        -e "s|^\($s\)-$s[\"']\(.*\)[\"']$s\$|\1$fs$fs\2|p" \
+        -e "s|^\($s\)-$s\(.*\)$s\$|\1$fs$fs\2|p" \
+        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p" | \
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]; idx[i]=0}}
+      if(length($2)== 0){  vname[indent]= ++idx[indent] };
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) { vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, vname[indent], $3);
+      }
+   }'
+}
+
 ENABLE_SSL=0
 EMAIL=""
 
@@ -34,6 +61,25 @@ echo "Enable ssl: $(( ENABLE_SSL == 1 ))"
 echo "Email $EMAIL"
 echo "Cwd: $DIR"
 echo
+
+getent group nerdz
+
+if [[ $? -gt 0 ]]; then
+    echo "[+] Creating the group nerdz with GID 7777."
+    sudo groupadd -g 7777 nerdz
+    echo "[+] Adding $USER to the nerdz group"
+    sudo gpasswd -a $USER nerdz
+fi
+
+echo "[+] Ensure every volume on the host has the correct group and permission."
+volumes_mapping=$(parse_yaml docker-compose.yml  |grep volume | cut -d= -f2)
+for vol in ${volumes_mapping//\"}; do
+    local_folder=(echo $vol | cut -d: -f1)
+    sudo chown -R $USER:nerdz $local_folder
+    sudo chmod -R 0775 $local_folder
+    sudo chmod g+s $local_folder
+done
+
 
 echo "[+] Creating a new virtualenv in ./venv"
 if [ ! -d venv ]; then
