@@ -1,4 +1,5 @@
 postgres/data
+redis/data
 *.custom
 venv/
 certbot/

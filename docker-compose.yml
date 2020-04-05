@@ -26,12 +26,12 @@ services:
             - "80:80"
             - "433:433"
         links:
-            - php
+           - certbot
         volumes:
             - ./nginx/conf.d:/etc/nginx/conf.d
             - ./certbot/conf:/etc/letsencrypt
             - ./certbot/www:/var/www/certbot
-        command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
+        entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
 
 
     certbot:
@@ -46,11 +46,11 @@ services:
         image: jostyee/camo:latest
         restart: unless-stopped
         expose:
-            - "8081"
+          - "8081"
         links:
-            - nginx
-        volumes:
-            - ./camo/camo:/opt/camo
+          - nginx
+        environment:
+          - CAMO_KEY=YOUR_KEY
 
     redis:
         image: redis:5.0
@@ -58,7 +58,7 @@ services:
         expose:
             - "6379"
         volumes:
-            - ./nerdzcrush/redis:/data
+            - ./redis/data:/data
 
     nerdzcrush:
         image: nerdzeu/docker-nerdzcrush:1.0.0
@@ -67,6 +67,7 @@ services:
             - "9999"
         links:
             - redis
+            - nginx
         volumes:
             - ./nerdzcrush/mediacrush:/home/mediacrush
 
@@ -76,6 +77,7 @@ services:
         expose:
             - "8080"
         links:
+            - nginx
             - postgres
         volumes:
             - ./api/runtime:/go/runtime
