@@ -2,6 +2,9 @@
 
 # From https://github.com/wmnnd/nginx-certbot/blob/master/init-letsencrypt.sh
 # Copyright (c) 2018 Philipp Schmieder
+#
+# updated to be correclty used in nerdz
+# Copyright (c) 2020 Paolo Galeone <nessuno@nerdz.eu>
 
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
