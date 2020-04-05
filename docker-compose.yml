@@ -61,7 +61,7 @@ services:
             - ./nerdzcrush/redis:/data
 
     nerdzcrush:
-        image: nerdzeu/docker-nerdzcrush:latest
+        image: nerdzeu/docker-nerdzcrush:1.0.0
         restart: unless-stopped
         expose:
             - "9999"
