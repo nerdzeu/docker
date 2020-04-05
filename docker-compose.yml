@@ -27,7 +27,7 @@ services:
         - ./php/websites:/srv/http
 
     nginx:
-      image: nginx:1.16-perl
+      image: nerdzeu/docker-nginx:1.0.0
       restart: unless-stopped
       ports:
         - "80:80"
