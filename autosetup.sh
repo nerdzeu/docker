@@ -74,8 +74,9 @@ echo "[+] Ensure every volume on the host has the correct group and permission."
 volumes_mapping=$(parse_yaml docker-compose.yml  |grep volume | cut -d= -f2)
 for vol in ${volumes_mapping//\"}; do
     local_folder=$(echo $vol | cut -d: -f1)
+    mkdir -p $local_folder
     sudo chown -R $USER:nerdz $local_folder
-    sudo chmod -R 0775 $local_folder
+    sudo chmod -R 775 $local_folder
     sudo chmod g+s $local_folder
 done
 
@@ -89,18 +90,24 @@ source venv/bin/activate
 echo "[+] Installing docker-compose in a virtualenv..."
 pip install docker-compose==1.25.4
 
-echo "[+] Putting your hostname ($DOMAIN) where needed..."
+echo "[+] Configuring nginx to use $DOMAIN"
 
-grep -rlZ "nerdz.eu" nginx/ | xargs -0 -l sed -i -e "s/nerdz.eu/$DOMAIN/g"
+mv nginx/conf.d/nerdz.eu nginx/conf.d/$DOMAIN
+mv nginx/conf.d/nerdz.eu.conf nginx/conf.d/$DOMAIN.conf
+
+grep -rlZ "nerdz.eu" nginx/conf.d/$DOMAIN | xargs -0 -l sed -i -e "s/nerdz.eu/$DOMAIN/g"
+sed -i -e "s/nerdz.eu/$DOMAIN/g" nginx/conf.d/$DOMAIN.conf
 
 if (( $ENABLE_SSL )); then
     echo "[+] Certbot configuration..."
     bash init-letsencrypt.sh "$DOMAIN" "$EMAIL"
 else
     # Remove all redirects if https is disabled
-    begin_line=$(grep -n "HTTP->HTTPS" nginx/conf.d/nerdz.eu.conf  |cut -d: -f 1)
-    end_line=$(wc -l nginx/conf.d/nerdz.eu.conf | awk '{ print $1 }')
-    sed -i -e "$begin_line,$end_line s/^/#/" nginx/conf.d/nerdz.eu.conf
+    begin_line=$(grep -n "HTTP->HTTPS" nginx/conf.d/$DOMAIN.conf  |cut -d: -f 1)
+    end_line=$(wc -l nginx/conf.d/$DOMAIN.conf | awk '{ print $1 }')
+    sed -i -e "$begin_line,$end_line s/^/#/" nginx/conf.d/$DOMAIN.conf
+    # Remove all inclusion of ssl configuration
+    sed -i -e "s!include conf.d/$DOMAIN/ssl_\(.*\).conf!#include conf.d/$DOMAIN/ssl_\1.conf!g" nginx/conf.d/$DOMAIN.conf
 fi
 
 echo "[+] Configuring nerdzcrush..."
