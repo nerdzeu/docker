@@ -62,8 +62,7 @@ echo "Email $EMAIL"
 echo "Cwd: $DIR"
 echo
 
-getent group nerdz
-
+getent group nerdz > /dev/null
 if [[ $? -gt 0 ]]; then
     echo "[+] Creating the group nerdz with GID 7777."
     sudo groupadd -g 7777 nerdz
@@ -74,7 +73,7 @@ fi
 echo "[+] Ensure every volume on the host has the correct group and permission."
 volumes_mapping=$(parse_yaml docker-compose.yml  |grep volume | cut -d= -f2)
 for vol in ${volumes_mapping//\"}; do
-    local_folder=(echo $vol | cut -d: -f1)
+    local_folder=$(echo $vol | cut -d: -f1)
     sudo chown -R $USER:nerdz $local_folder
     sudo chmod -R 0775 $local_folder
     sudo chmod g+s $local_folder
