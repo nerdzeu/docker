@@ -110,6 +110,14 @@ else
     sed -i -e "s!include conf.d/$DOMAIN/ssl_\(.*\).conf!#include conf.d/$DOMAIN/ssl_\1.conf!g" nginx/conf.d/$DOMAIN.conf
 fi
 
+# create one symlink per domain (with php code)
+if [ "$DOMAIN" != "nerdz.eu" ]; then
+    ln -s nerdz.eu php/websites/$DOMAIN
+fi
+for sub in www mobile static; do
+    ln -s nerdz.eu php/websites/"$sub"."$DOMAIN"
+done
+
 echo "[+] Configuring nerdzcrush..."
 cp nerdzcrush/mediacrush/MediaCrush/config.ini.sample nerdzcrush/mediacrush/MediaCrush/config.ini
 
@@ -119,6 +127,13 @@ fi
 
 sed -i -e "s/mediacru.sh/media.$DOMAIN/g" nerdzcrush/mediacrush/MediaCrush/config.ini
 sed -i -e "s/redis-ip =.*$/redis-ip = redis/g" nerdzcrush/mediacrush/MediaCrush/config.ini
+
+echo "[+] Configuring API..."
+
+cp api/confSample.json api/runtime/config.json
+sed -i -e "s/nerdz.eu/$DOMAIN/g" api/runtime/config.json
+sed -i -e "s/127.0.0.1/postgres/g" api/runtime/config.json
+sed -i -e 's#"NERDZPath".*#"NERDZPath"  : "/srv/http/nerdz.eu/",#g' api/runtime/config.json
 
 echo "[+] Creating nerdz.service file in systemd/nerdz.service"
 sed -i -e "s#auto-replace-me#$DIR#g" systemd/nerdz.service
