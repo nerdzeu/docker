@@ -2,84 +2,87 @@ version: '3'
 
 services:
     postgres:
-        image: postgres:12.2
-        restart: unless-stopped
-        expose:
-            - "5432"
-        volumes:
-            - ./postgres/data:/var/lib/postgresql/data
+      image: postgres:12.2
+      restart: unless-stopped
+      expose:
+        - "5432"
+      volumes:
+        - ./postgres/data:/var/lib/postgresql/data
+      environment:
+        - POSTGRES_PASSWORD=passwd
 
     php:
-        image: nerdzeu/docker-php:1.0.0
-        restart: unless-stopped
-        expose:
-            - "9000"
-        links:
-            - postgres
-        volumes:
-            - ./php/nerdz.eu:/var/www/html
+      image: nerdzeu/docker-php:1.0.0
+      restart: unless-stopped
+      expose:
+        - "9000"
+      links:
+        - postgres
+      volumes:
+        - ./php/websites:/var/www/html
 
     nginx:
-        image: nginx:1.16-perl
-        restart: unless-stopped
-        ports:
-            - "80:80"
-            - "433:433"
-        links:
-           - certbot
-        volumes:
-            - ./nginx/conf.d:/etc/nginx/conf.d
-            - ./certbot/conf:/etc/letsencrypt
-            - ./certbot/www:/var/www/certbot
-        entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
-
+      image: nginx:1.16-perl
+      restart: unless-stopped
+      ports:
+        - "80:80"
+        - "433:433"
+      links:
+        - certbot
+        - php
+        - nerdzcrush
+        - api
+        - camo
+      volumes:
+        - ./php/websites:/srv/http
+        - ./nginx/conf.d:/etc/nginx/conf.d
+        - ./certbot/conf:/etc/letsencrypt
+        - ./certbot/www:/var/www/certbot
+      entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
 
     certbot:
-        image: certbot/certbot
-        restart: unless-stopped
-        volumes:
-          - ./certbot/conf:/etc/letsencrypt
-          - ./certbot/www:/var/www/certbot
-        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      image: certbot/certbot
+      restart: unless-stopped
+      volumes:
+        - ./certbot/conf:/etc/letsencrypt
+        - ./certbot/www:/var/www/certbot
+      entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
     camo:
-        image: jostyee/camo:latest
-        restart: unless-stopped
-        expose:
-          - "8081"
-        links:
-          - nginx
-        environment:
-          - CAMO_KEY=YOUR_KEY
+      image: jostyee/camo:latest
+      restart: unless-stopped
+      expose:
+        - "8081"
+      environment:
+        - CAMO_KEY=YOUR_KEY
 
     redis:
-        image: redis:5.0
-        restart: unless-stopped
-        expose:
-            - "6379"
-        volumes:
-            - ./redis/data:/data
+      image: redis:5.0
+      restart: unless-stopped
+      expose:
+        - "6379"
+      volumes:
+        - ./redis/data:/data
 
     nerdzcrush:
-        image: nerdzeu/docker-nerdzcrush:1.0.0
-        restart: unless-stopped
-        expose:
-            - "9999"
-        links:
-            - redis
-            - nginx
-        volumes:
-            - ./nerdzcrush/mediacrush:/home/mediacrush
+      image: nerdzeu/docker-nerdzcrush:1.0.0
+      restart: unless-stopped
+      expose:
+        - "9999"
+      links:
+        - redis
+      volumes:
+        - ./nerdzcrush/mediacrush:/home/mediacrush
 
     api:
-        image: nerdzeu/nerdz-api:1.0.0
-        restart: unless-stopped
-        expose:
-            - "8080"
-        links:
-            - nginx
-            - postgres
-        volumes:
-            - ./api/runtime:/go/runtime
-        environment:
-            - CONF_FILE=/go/runtime/config.json
+      image: nerdzeu/nerdz-api:1.0.0
+      restart: unless-stopped
+      expose:
+        - "8080"
+      links:
+        - postgres
+      volumes:
+        - ./api/runtime:/go/runtime
+        - ./php/websites/nerdz.eu:/srv/http/nerdz.eu/
+      environment:
+        - CONF_FILE=/go/runtime/config.json
