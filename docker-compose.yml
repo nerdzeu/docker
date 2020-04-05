@@ -19,7 +19,12 @@ services:
       links:
         - postgres
       volumes:
-        - ./php/websites:/var/www/html
+        # NOTE: the mount point MUST be the same of
+        # nginx, even if the php-fpm "desired" volume
+        # is different.
+        # This is needed because fastcgi passes the
+        # FULL path of the PHP script.
+        - ./php/websites:/srv/http
 
     nginx:
       image: nginx:1.16-perl
