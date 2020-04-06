@@ -136,6 +136,15 @@ sed -i -e "s/nerdz.eu/$DOMAIN/g" api/runtime/config.json
 sed -i -e "s/127.0.0.1/postgres/g" api/runtime/config.json
 sed -i -e 's#"NERDZPath".*#"NERDZPath"  : "/srv/http/nerdz.eu/",#g' api/runtime/config.json
 
+
+echo "[+] Configuring php..."
+cp php/websites/nerdz.eu/config.json.sample php/websites/nerdz.eu/config.json
+sed -i -e "s/example.com/$DOMAIN/g" php/websites/nerdz.eu/config.json
+camo_key=$(parse_yaml docker-compose.yml |grep "CAMO_KEY" | cut -d'=' -f3)
+camo_key=$(echo ${camo_key//\"})
+sed -i -e "s/THAT-CAMO-KEY/$camo_key/g" php/websites/nerdz.eu/config.json
+sed -i -e "s/127.0.0.1/postgres/g" php/websites/nerdz.eu/config.json
+
 echo "[+] Creating nerdz.service file in systemd/nerdz.service"
 sed -i -e "s#auto-replace-me#$DIR#g" systemd/nerdz.service
 echo
