@@ -78,6 +78,7 @@ for vol in ${volumes_mapping//\"}; do
     sudo chown -R $USER:nerdz $local_folder
     sudo chmod -R 775 $local_folder
     sudo chmod g+s $local_folder
+    sudo setfacl -d -m group:nerdz:rwx $local_folder
 done
 
 
