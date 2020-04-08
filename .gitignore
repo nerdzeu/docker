@@ -1,5 +1,5 @@
 postgres/data
 redis/data
-*.custom
 venv/
 certbot/
+systemd/nerdz.service

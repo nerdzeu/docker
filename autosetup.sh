@@ -146,6 +146,7 @@ sed -i -e "s/THAT-CAMO-KEY/$camo_key/g" php/websites/nerdz.eu/config.json
 sed -i -e "s/127.0.0.1/postgres/g" php/websites/nerdz.eu/config.json
 
 echo "[+] Creating nerdz.service file in systemd/nerdz.service"
+cp systemd/nerdz.service.sample systemd/nerdz.service
 sed -i -e "s#auto-replace-me#$DIR#g" systemd/nerdz.service
 echo
 echo "Done."
