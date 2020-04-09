@@ -51,6 +51,12 @@ if [ $# -lt 1 ]; then
     usage
 fi
 
+which composer
+if [ $? -gt 0 ]; then
+    echo "Composer is required in the system. Please install composer."
+    exit 1;
+fi
+
 DOMAIN=$1
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -144,6 +150,11 @@ camo_key=$(parse_yaml docker-compose.yml |grep "CAMO_KEY" | cut -d'=' -f3)
 camo_key=$(echo ${camo_key//\"})
 sed -i -e "s/THAT-CAMO-KEY/$camo_key/g" php/websites/nerdz.eu/config.json
 sed -i -e "s/127.0.0.1/postgres/g" php/websites/nerdz.eu/config.json
+
+# Install all php dependencies
+pushd php/websites/nerdz.eu
+composer install
+popd
 
 echo "[+] Creating nerdz.service file in systemd/nerdz.service"
 cp systemd/nerdz.service.sample systemd/nerdz.service
