@@ -13,14 +13,20 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     CREATE DATABASE nerdz;
     GRANT ALL PRIVILEGES ON DATABASE nerdz TO nerdz;
     ALTER ROLE nerdz WITH PASSWORD 'nerdz';
+    ALTER DATABASE nerdz OWNER to nerdz;
+    CREATE EXTENSION pgcrypto;
 EOSQL
 
 # Set timezone to UTC and create extension pgcrypto
 
-psql "nerdz" "nerdz" <<-EOSQL
+psql -v ON_ERROR_STOP=1 -U "nerdz" "nerdz" <<-EOSQL
 ALTER DATABASE nerdz SET timezone = 'UTC';
-CREATE EXTENSION pgcrypto;
 EOSQL
 
 # Initialize the db
-psql -U "nerdz" "nerdz" < $schema
+psql -v ON_ERROR_STOP=1 -U "nerdz" "nerdz" < $schema
+
+# Be sure that nerdz is the real owner of the db nerdz
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "nerdz" <<-EOSQL
+    ALTER DATABASE nerdz OWNER to nerdz;
+EOSQL
