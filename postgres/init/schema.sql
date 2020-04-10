@@ -3164,7 +3164,6 @@ CREATE TABLE users (
     name character varying(60) NOT NULL,
     surname character varying(60) NOT NULL,
     email character varying(350) NOT NULL,
-    gender boolean NOT NULL,
     birth_date date NOT NULL,
     board_lang character varying(2) DEFAULT 'en'::character varying NOT NULL,
     timezone character varying(35) DEFAULT 'UTC'::character varying NOT NULL,
