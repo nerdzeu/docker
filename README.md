@@ -5,6 +5,8 @@ Setup the whole NERDZ platform in a single step.
 
 ## Usage
 
+Do the single step to install everything:
+
 ```sh
 git clone --recursive https://github.com/nerdzeu/docker
 cd docker
@@ -16,6 +18,12 @@ cd docker
 # Do you want to develo locally without using HTTPS
 ./autosetup.sh -s 0 <domain>
 #e.g ./autosetup.sh -s 0 local.nerdz.eu
+```
+
+Now you're ready to start the platform.
+
+```
+docker-compose up
 ```
 
 The autosetup script does everything for you.
