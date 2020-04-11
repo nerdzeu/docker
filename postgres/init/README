@@ -1,0 +1,2 @@
+SQL files must not end with .sql, otherwise the container init script will run them.
+Instead, these files are used by the init_postgres.sh script, in a specific order, to restore or create the database.
