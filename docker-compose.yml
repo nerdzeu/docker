@@ -68,16 +68,16 @@ services:
       volumes:
         - ./redis/data:/data
 
-    nerdzcrush:
-      image: nerdzeu/docker-nerdzcrush:1.0.0
-      restart: unless-stopped
-      expose:
-        - "9999"
-      depends_on:
-        - nginx
-        - redis
-      volumes:
-        - ./nerdzcrush/mediacrush:/home/mediacrush
+    #nerdzcrush:
+    #  image: nerdzeu/docker-nerdzcrush:1.0.0
+    #  restart: unless-stopped
+    #  expose:
+    #    - "9999"
+    #  depends_on:
+    #    - nginx
+    #    - redis
+    #  volumes:
+    #    - ./nerdzcrush/mediacrush:/home/mediacrush
 
     api:
       image: nerdzeu/nerdz-api:1.0.0
@@ -99,7 +99,7 @@ services:
       expose:
         - "40455"
       volumes:
-        - ./api:/api
-      entrypoint: "swagger serve --no-open /api/doc/swagger/swagger.json"
+        - ./api/doc/swagger:/api
+      entrypoint: "swagger serve --no-open -p 40455 --host=0.0.0.0 /api/swagger.json"
       depends_on:
         - nginx
