@@ -35,6 +35,11 @@ services:
         - "433:433"
       depends_on:
         - certbot
+        - php
+        - api
+        - camo
+        - nerdzcrush
+        - apidoc
       volumes:
         - ./php/websites:/srv/http
         - ./nginx/conf.d:/etc/nginx/conf.d
@@ -55,8 +60,6 @@ services:
       restart: unless-stopped
       expose:
         - "8081"
-      depends_on:
-        - nginx
       environment:
         - CAMO_KEY=YOUR_KEY
 
@@ -68,16 +71,15 @@ services:
       volumes:
         - ./redis/data:/data
 
-    #nerdzcrush:
-    #  image: nerdzeu/docker-nerdzcrush:1.0.0
-    #  restart: unless-stopped
-    #  expose:
-    #    - "9999"
-    #  depends_on:
-    #    - nginx
-    #    - redis
-    #  volumes:
-    #    - ./nerdzcrush/mediacrush:/home/mediacrush
+    nerdzcrush:
+      image: nerdzeu/docker-nerdzcrush:1.0.0
+      restart: unless-stopped
+      expose:
+        - "9999"
+      depends_on:
+        - redis
+      volumes:
+        - ./nerdzcrush/mediacrush:/home/mediacrush
 
     api:
       image: nerdzeu/nerdz-api:1.0.0
@@ -85,7 +87,6 @@ services:
       expose:
         - "8080"
       depends_on:
-        - nginx
         - postgres
       volumes:
         - ./api/runtime:/go/runtime
@@ -101,5 +102,3 @@ services:
       volumes:
         - ./api/doc/swagger:/api
       entrypoint: "swagger serve --no-open -p 40455 --host=0.0.0.0 /api/swagger.json"
-      depends_on:
-        - nginx
