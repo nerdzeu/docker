@@ -17,7 +17,7 @@ services:
       restart: unless-stopped
       expose:
         - "9000"
-      links:
+      depends_on:
         - postgres
       volumes:
         # NOTE: the mount point MUST be the same of
@@ -33,12 +33,8 @@ services:
       ports:
         - "80:80"
         - "433:433"
-      links:
+      depends_on:
         - certbot
-        - php
-        - nerdzcrush
-        - api
-        - camo
       volumes:
         - ./php/websites:/srv/http
         - ./nginx/conf.d:/etc/nginx/conf.d
@@ -59,6 +55,8 @@ services:
       restart: unless-stopped
       expose:
         - "8081"
+      depends_on:
+        - nginx
       environment:
         - CAMO_KEY=YOUR_KEY
 
@@ -75,7 +73,8 @@ services:
       restart: unless-stopped
       expose:
         - "9999"
-      links:
+      depends_on:
+        - nginx
         - redis
       volumes:
         - ./nerdzcrush/mediacrush:/home/mediacrush
@@ -85,10 +84,22 @@ services:
       restart: unless-stopped
       expose:
         - "8080"
-      links:
+      depends_on:
+        - nginx
         - postgres
       volumes:
         - ./api/runtime:/go/runtime
         - ./php/websites/nerdz.eu:/srv/http/nerdz.eu/
       environment:
         - CONF_FILE=/go/runtime/config.json
+
+    apidoc:
+      image: quay.io/goswagger/swagger:latest
+      restart: unless-stopped
+      expose:
+        - "40455"
+      volumes:
+        - ./api:/api
+      entrypoint: "swagger serve --no-open /api/doc/swagger/swagger.json"
+      depends_on:
+        - nginx
