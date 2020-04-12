@@ -6,7 +6,7 @@
 	url = https://github.com/nerdzeu/docker-php
 [submodule "nerdzcrush"]
 	path = nerdzcrush
-	url = https://github.com/nerdzeu/docker-NERDZCrush.git
+	url = https://github.com/nerdzeu/docker-NERDZCrush
 [submodule "api"]
 	path = api
 	url = https://github.com/nerdzeu/nerdz-api
