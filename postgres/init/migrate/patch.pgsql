@@ -1505,6 +1505,9 @@ update pms set lang = users.lang from users where pms.from = users.counter;
 update comments set lang = users.lang from users where comments.from = users.counter;
 update groups_comments set lang = users.lang from users where groups_comments.from = users.counter;
 
+-- remove gender column
+ALTER TABLE users DROP COLUMN gender;
+
 -- TODO: https://news.ycombinator.com/item?id=9512912
 -- https://blog.lateral.io/2015/05/full-text-search-in-milliseconds-with-postgresql/
 /*
