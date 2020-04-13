@@ -1361,6 +1361,8 @@ update profiles set dateformat = 'd/m/Y';
 -- use jsonb instead of json
 ALTER TABLE profiles ALTER COLUMN template_variables SET DATA TYPE jsonb USING template_variables::jsonb;
 ALTER TABLE "users" ALTER COLUMN notify_story SET DATA TYPE jsonb USING notify_story::jsonb;
+-- clean up notify story because the JSON inside might have a new structure in the new fronted
+UPDATE "users" SET notify_story = NULL;
 
 -- do not delete notifications after they've been read, create a to_notify column instead an set it to false
 -- when the notification gets read
