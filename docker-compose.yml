@@ -1,5 +1,8 @@
 version: '3'
 
+networks:
+  net:
+
 services:
     postgres:
       image: postgres:12.2
@@ -11,6 +14,8 @@ services:
         - ./postgres/data:/var/lib/postgresql/data
       environment:
         - POSTGRES_PASSWORD=passwd
+      networks:
+        - net
 
     php:
       image: nerdzeu/docker-php:1.0.0
@@ -26,6 +31,8 @@ services:
         # This is needed because fastcgi passes the
         # FULL path of the PHP script.
         - ./php/websites:/srv/http
+      networks:
+        - net
 
     nginx:
       image: nerdzeu/docker-nginx:1.0.0
@@ -46,6 +53,8 @@ services:
         - ./certbot/conf:/etc/letsencrypt
         - ./certbot/www:/var/www/certbot
       entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
+      networks:
+        - net
 
     certbot:
       image: certbot/certbot
@@ -54,6 +63,8 @@ services:
         - ./certbot/conf:/etc/letsencrypt
         - ./certbot/www:/var/www/certbot
       entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      networks:
+        - net
 
     camo:
       image: jostyee/camo:latest
@@ -62,6 +73,8 @@ services:
         - "8081"
       environment:
         - CAMO_KEY=YOUR_KEY
+      networks:
+        - net
 
     redis:
       image: redis:5.0
@@ -70,6 +83,8 @@ services:
         - "6379"
       volumes:
         - ./redis/data:/data
+      networks:
+        - net
 
     nerdzcrush:
       image: nerdzeu/docker-nerdzcrush:1.0.0
@@ -80,6 +95,8 @@ services:
         - redis
       volumes:
         - ./nerdzcrush/mediacrush:/home/mediacrush
+      networks:
+        - net
 
     api:
       image: nerdzeu/nerdz-api:1.0.0
@@ -93,6 +110,8 @@ services:
         - ./php/websites/nerdz.eu:/srv/http/nerdz.eu/
       environment:
         - CONF_FILE=/go/runtime/config.json
+      networks:
+        - net
 
     apidoc:
       image: quay.io/goswagger/swagger:latest
@@ -102,3 +121,5 @@ services:
       volumes:
         - ./api/doc/swagger:/api
       entrypoint: "swagger serve --no-open -p 40455 --host=0.0.0.0 /api/swagger.json"
+      networks:
+        - net
