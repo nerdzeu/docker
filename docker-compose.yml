@@ -52,7 +52,7 @@ services:
         - ./nginx/conf.d:/etc/nginx/conf.d
         - ./certbot/conf:/etc/letsencrypt
         - ./certbot/www:/var/www/certbot
-      entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
+      entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
       networks:
         - net
 
