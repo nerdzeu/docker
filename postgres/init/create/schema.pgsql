@@ -2832,6 +2832,8 @@ ALTER SEQUENCE public.oauth2_authorize_id_seq OWNED BY public.oauth2_authorize.i
 CREATE TABLE public.oauth2_clients (
     id bigint NOT NULL,
     name character varying(100) NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    scope text NOT NULL,
     secret text NOT NULL,
     redirect_uri character varying(350) NOT NULL,
     user_id bigint NOT NULL

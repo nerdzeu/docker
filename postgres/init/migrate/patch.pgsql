@@ -1311,7 +1311,9 @@ alter table profiles drop column interests;
 drop table if exists oauth2_clients cascade;
 create table oauth2_clients(
     id bigserial not null primary key,
-    name varchar(100) not null,
+    name character varying(100) NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    scope text NOT NULL,
     secret text not null unique,
     redirect_uri varchar(350) not null,
     user_id bigint not null references users(counter) on delete cascade
