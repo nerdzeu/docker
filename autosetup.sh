@@ -108,6 +108,7 @@ sed -i -e "s/nerdz.eu/$DOMAIN/g" nginx/conf.d/$DOMAIN.conf
 if (( $ENABLE_SSL )); then
     echo "[+] Certbot configuration..."
     bash init-letsencrypt.sh "$DOMAIN" "$EMAIL"
+    # TODO: comment all listen 80 NOT in redirect blocks
 else
     # Remove all redirects if https is disabled
     begin_line=$(grep -n "HTTP->HTTPS" nginx/conf.d/$DOMAIN.conf  |cut -d: -f 1)
