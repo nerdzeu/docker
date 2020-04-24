@@ -19,7 +19,7 @@ fi
 domains=("$1" www."$1" mobile."$1" static."$1" media."$1" api."$1")
 rsa_key_size=4096
 data_path="./certbot"
-email="$1" # Adding a valid address is strongly recommended
+email="$2" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
