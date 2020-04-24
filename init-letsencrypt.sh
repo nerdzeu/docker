@@ -48,8 +48,6 @@ for domain in "${domains[@]}"; do
         -keyout '$path/privkey.pem' \
         -out '$path/fullchain.pem' \
         -subj '/CN=localhost'" certbot
-    echo
-
 done
 
 echo "### Starting nginx ..."
@@ -63,7 +61,7 @@ for domain in "${domains[@]}"; do
       rm -Rf /etc/letsencrypt/live/$domain && \
       rm -Rf /etc/letsencrypt/archive/$domain && \
       rm -Rf /etc/letsencrypt/renewal/$domain.conf" certbot
-    echo
+    echo "$domain"
 done
 
 echo "### Requesting Let's Encrypt certificate for $domains ..."
