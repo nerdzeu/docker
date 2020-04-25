@@ -67,7 +67,7 @@ services:
         - net
 
     camo:
-      image: jostyee/camo:latest
+      image: nerdzeu/docker-camo:1.0.0
       restart: unless-stopped
       expose:
         - "8081"

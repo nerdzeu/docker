@@ -10,3 +10,6 @@
 [submodule "api"]
 	path = api
 	url = https://github.com/nerdzeu/nerdz-api
+[submodule "camo"]
+	path = camo
+	url = https://github.com/nerdzeu/docker-camo
