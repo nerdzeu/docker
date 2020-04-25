@@ -108,7 +108,6 @@ sed -i -e "s/nerdz.eu/$DOMAIN/g" nginx/conf.d/$DOMAIN.conf
 if (( $ENABLE_SSL )); then
     echo "[+] Certbot configuration..."
     bash init-letsencrypt.sh "$DOMAIN" "$EMAIL"
-    # TODO: comment all listen 80 NOT in redirect blocks
 else
     # Remove all redirects if https is disabled
     begin_line=$(grep -n "HTTP->HTTPS" nginx/conf.d/$DOMAIN.conf  |cut -d: -f 1)
@@ -116,6 +115,8 @@ else
     sed -i -e "$begin_line,$end_line s/^/#/" nginx/conf.d/$DOMAIN.conf
     # Remove all inclusion of ssl configuration
     sed -i -e "s!include conf.d/$DOMAIN/ssl_\(.*\).conf!#include conf.d/$DOMAIN/ssl_\1.conf!g" nginx/conf.d/$DOMAIN.conf
+    # Decomment all listen 80;
+    sed -i -e "s/#listen 80;/listen 80;/g" nginx/conf.d/$DOMAIN.conf
 fi
 
 # create one symlink per domain (with php code)
