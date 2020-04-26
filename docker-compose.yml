@@ -95,6 +95,7 @@ services:
         - redis
       volumes:
         - ./nerdzcrush/mediacrush:/home/mediacrush
+        - ./nerdzcrush/storage:/home/mediacrush/MediaCrush/storage/
       networks:
         - net
 
