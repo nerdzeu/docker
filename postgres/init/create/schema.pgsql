@@ -5142,30 +5142,6 @@ ALTER TABLE ONLY public.oauth2_access
 
 
 --
--- Name: oauth2_access oauth2_access_oauth2_access_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.oauth2_access
-    ADD CONSTRAINT oauth2_access_oauth2_access_id_fkey FOREIGN KEY (oauth2_access_id) REFERENCES public.oauth2_access(id) ON DELETE CASCADE;
-
-
---
--- Name: oauth2_access oauth2_access_oauth2_authorize_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.oauth2_access
-    ADD CONSTRAINT oauth2_access_oauth2_authorize_id_fkey FOREIGN KEY (oauth2_authorize_id) REFERENCES public.oauth2_authorize(id) ON DELETE CASCADE;
-
-
---
--- Name: oauth2_access oauth2_access_refresh_token_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.oauth2_access
-    ADD CONSTRAINT oauth2_access_refresh_token_id_fkey FOREIGN KEY (refresh_token_id) REFERENCES public.oauth2_refresh(id) ON DELETE CASCADE;
-
-
---
 -- Name: oauth2_access oauth2_access_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
