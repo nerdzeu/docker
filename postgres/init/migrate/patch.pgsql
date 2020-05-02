@@ -1282,6 +1282,21 @@ ALTER TABLE users ALTER COLUMN last SET DEFAULT now() at time zone 'utc';
 ALTER TABLE whitelist ALTER COLUMN "time" TYPE timestamp without time zone;
 ALTER TABLE whitelist ALTER COLUMN "time" SET DEFAULT now() at time zone 'utc';
 
+ALTER TABLE followers ALTER COLUMN "time" TYPE timestamp without time zone;
+ALTER TABLE followers ALTER COLUMN "time" SET DEFAULT now() at time zone 'utc';
+
+ALTER TABLE pms ALTER COLUMN "time" TYPE timestamp without time zone;
+ALTER TABLE pms ALTER COLUMN "time" SET DEFAULT now() at time zone 'utc';
+
+ALTER TABLE thumbs ALTER COLUMN "time" TYPE timestamp without time zone;
+ALTER TABLE thumbs ALTER COLUMN "time" SET DEFAULT now() at time zone 'utc';
+
+ALTER TABLE users ALTER COLUMN registration_time TYPE timestamp without time zone;
+ALTER TABLE users ALTER COLUMN registration_time SET DEFAULT now() at time zone 'utc';
+
+-- hashtag funtion was duplicated: 1 with timestamp with timezone and 1 without timezone (to keep)
+DROP FUNCTION IF EXISTS hashtag (message text, hpid bigint, grp boolean, from_u bigint, m_time timestamp with time zone);
+
 create view messages as
 select "hpid","from","to","pid","message","time","news","lang","closed", 0 as type from groups_posts
 union all

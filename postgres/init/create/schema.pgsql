@@ -956,7 +956,7 @@ END $$;
 ALTER FUNCTION public.handle_groups_on_user_delete(usercounter bigint) OWNER TO nerdz;
 
 --
--- Name: hashtag(text, bigint, boolean, bigint, timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: hashtag(text, bigint, boolean, bigint, timestamp without time zone); Type: FUNCTION; Schema: public; Owner: nerdz
 --
 
 CREATE FUNCTION public.hashtag(message text, hpid bigint, grp boolean, from_u bigint, m_time timestamp without time zone) RETURNS void
@@ -977,7 +977,7 @@ message = quote_literal(message);
 
 EXECUTE '
 insert into posts_classification(' || field || ' , "from", time, tag)
-select distinct ' || hpid ||', ' || from_u || ', ''' || m_time || '''::timestamptz, tmp.matchedTag[1] from (
+select distinct ' || hpid ||', ' || from_u || ', ''' || m_time || '''::timestamp, tmp.matchedTag[1] from (
     -- 1: existing hashtags
     select concat(''{#'', a.matchedTag[1], ''}'')::text[] as matchedTag from (
         select regexp_matches(' || strip_tags(message) || ', ''(?:\s|^|\W)#' || regex || ''', ''gi'')
@@ -1009,63 +1009,7 @@ where not exists (
 END $$;
 
 
-ALTER FUNCTION public.hashtag(message text, hpid bigint, grp boolean, from_u bigint, m_time timestamp without time zone) OWNER TO postgres;
-
---
--- Name: hashtag(text, bigint, boolean, bigint, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: nerdz
---
-
-CREATE FUNCTION public.hashtag(message text, hpid bigint, grp boolean, from_u bigint, m_time timestamp with time zone) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-     declare field text;
-             regex text;
-BEGIN
-     IF grp THEN
-         field := 'g_hpid';
-     ELSE
-         field := 'u_hpid';
-     END IF;
-
-     regex = '((?![\d]+[[^\w]+|])[\w]{1,44})';
-
-     message = quote_literal(message);
-
-     EXECUTE '
-     insert into posts_classification(' || field || ' , "from", time, tag)
-     select distinct ' || hpid ||', ' || from_u || ', ''' || m_time || '''::timestamptz, tmp.matchedTag[1] from (
-         -- 1: existing hashtags
-        select concat(''{#'', a.matchedTag[1], ''}'')::text[] as matchedTag from (
-            select regexp_matches(' || strip_tags(message) || ', ''(?:\s|^|\W)#' || regex || ''', ''gi'')
-            as matchedTag
-        ) as a
-             union distinct -- 2: spoiler
-         select concat(''{#'', b.matchedTag[1], ''}'')::text[] from (
-             select regexp_matches(' || message || ', ''\[spoiler=' || regex || '\]'', ''gi'')
-             as matchedTag
-         ) as b
-             union distinct -- 3: languages
-          select concat(''{#'', c.matchedTag[1], ''}'')::text[] from (
-              select regexp_matches(' || message || ', ''\[code=' || regex || '\]'', ''gi'')
-             as matchedTag
-         ) as c
-            union distinct -- 4: languages, short tag
-         select concat(''{#'', d.matchedTag[1], ''}'')::text[] from (
-              select regexp_matches(' || message || ', ''\[c=' || regex || '\]'', ''gi'')
-             as matchedTag
-         ) as d
-     ) tmp
-     where not exists (
-        select 1
-        from posts_classification p
-        where ' || field ||'  = ' || hpid || ' and
-            p.tag = tmp.matchedTag[1] and
-            p.from = ' || from_u || ' -- store user association with tag even if tag already exists
-     )';
-END $$;
-
-
-ALTER FUNCTION public.hashtag(message text, hpid bigint, grp boolean, from_u bigint, m_time timestamp with time zone) OWNER TO nerdz;
+ALTER FUNCTION public.hashtag(message text, hpid bigint, grp boolean, from_u bigint, m_time timestamp without time zone) OWNER TO nerdz;
 
 --
 -- Name: interactions_query_builder(text, bigint, bigint, boolean); Type: FUNCTION; Schema: public; Owner: nerdz
@@ -1950,7 +1894,7 @@ CREATE TABLE public.followers (
     "from" bigint NOT NULL,
     "to" bigint NOT NULL,
     to_notify boolean DEFAULT true NOT NULL,
-    "time" timestamp(0) with time zone DEFAULT now() NOT NULL,
+    "time" timestamp without time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
     counter bigint NOT NULL
 );
 
@@ -2903,7 +2847,7 @@ ALTER SEQUENCE public.oauth2_refresh_id_seq OWNED BY public.oauth2_refresh.id;
 CREATE TABLE public.pms (
     "from" bigint NOT NULL,
     "to" bigint NOT NULL,
-    "time" timestamp(0) with time zone DEFAULT now() NOT NULL,
+    "time" timestamp without time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
     message text NOT NULL,
     to_read boolean DEFAULT true NOT NULL,
     pmid bigint NOT NULL,
@@ -3233,7 +3177,7 @@ CREATE TABLE public.thumbs (
     hpid bigint NOT NULL,
     "from" bigint NOT NULL,
     vote smallint NOT NULL,
-    "time" timestamp(0) with time zone DEFAULT now() NOT NULL,
+    "time" timestamp without time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
     "to" bigint NOT NULL,
     counter bigint NOT NULL,
     CONSTRAINT chkvote CHECK ((vote = ANY (ARRAY['-1'::integer, 0, 1])))
@@ -3284,7 +3228,7 @@ CREATE TABLE public.users (
     viewonline boolean DEFAULT true NOT NULL,
     remote_addr inet DEFAULT '127.0.0.1'::inet NOT NULL,
     http_user_agent text DEFAULT ''::text NOT NULL,
-    registration_time timestamp(0) with time zone DEFAULT now() NOT NULL
+    registration_time timestamp without time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 
