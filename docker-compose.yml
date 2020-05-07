@@ -16,6 +16,11 @@ services:
         - POSTGRES_PASSWORD=passwd
       networks:
         - net
+      logging:
+        driver: "json-file"
+        options:
+           max-size: "500k"
+           max-file: "10"
 
     php:
       image: nerdzeu/docker-php:1.0.0
@@ -33,6 +38,11 @@ services:
         - ./php/websites:/srv/http
       networks:
         - net
+      logging:
+        driver: "json-file"
+        options:
+           max-size: "500k"
+           max-file: "10"
 
     nginx:
       image: nerdzeu/docker-nginx:1.0.0
@@ -55,6 +65,11 @@ services:
       entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"; done & nginx -g \"daemon off; load_module /etc/nginx/modules/ngx_http_perl_module.so;\"'"
       networks:
         - net
+      logging:
+        driver: "json-file"
+        options:
+           max-size: "500k"
+           max-file: "10"
 
     certbot:
       image: certbot/certbot
@@ -85,6 +100,11 @@ services:
         - ./redis/data:/data
       networks:
         - net
+      logging:
+        driver: "json-file"
+        options:
+           max-size: "500k"
+           max-file: "10"
 
     nerdzcrush:
       image: nerdzeu/docker-nerdzcrush:1.0.0
@@ -98,6 +118,11 @@ services:
         - ./nerdzcrush/storage:/home/mediacrush/MediaCrush/storage/
       networks:
         - net
+      logging:
+        driver: "json-file"
+        options:
+           max-size: "500k"
+           max-file: "10"
 
     api:
       image: nerdzeu/nerdz-api:1.0.0
@@ -113,6 +138,11 @@ services:
         - CONF_FILE=/go/runtime/config.json
       networks:
         - net
+      logging:
+        driver: "json-file"
+        options:
+           max-size: "500k"
+           max-file: "10"
 
     apidoc:
       image: quay.io/goswagger/swagger:latest
