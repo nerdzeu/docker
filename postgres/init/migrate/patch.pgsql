@@ -1527,6 +1527,10 @@ update groups_comments set lang = users.lang from users where groups_comments.fr
 -- remove gender column
 ALTER TABLE users DROP COLUMN gender;
 
+-- unique (user.|project:)pid
+ALTER TABLE ONLY public.posts ADD CONSTRAINT posts_unique_to_pid UNIQUE ("to", pid);
+ALTER TABLE ONLY public.groups_posts ADD CONSTRAINT groups_posts_unique_to_pid UNIQUE ("to", pid);
+
 -- TODO: https://news.ycombinator.com/item?id=9512912
 -- https://blog.lateral.io/2015/05/full-text-search-in-milliseconds-with-postgresql/
 /*

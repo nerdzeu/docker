@@ -3945,6 +3945,14 @@ ALTER TABLE ONLY public.groups_posts_revisions
 
 
 --
+-- Name: groups_posts groups_posts_unique_to_pid; Type: CONSTRAINT; Schema: public; Owner: nerdz
+--
+
+ALTER TABLE ONLY public.groups_posts
+    ADD CONSTRAINT groups_posts_unique_to_pid UNIQUE ("to", pid);
+
+
+--
 -- Name: groups_thumbs groups_thumbs_pkey; Type: CONSTRAINT; Schema: public; Owner: nerdz
 --
 
@@ -4126,6 +4134,14 @@ ALTER TABLE ONLY public.posts_revisions
 
 ALTER TABLE ONLY public.posts_revisions
     ADD CONSTRAINT posts_revisions_unique_hpid_rev_no UNIQUE (hpid, rev_no);
+
+
+--
+-- Name: posts posts_unique_to_pid; Type: CONSTRAINT; Schema: public; Owner: nerdz
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_unique_to_pid UNIQUE ("to", pid);
 
 
 --
@@ -5082,7 +5098,31 @@ ALTER TABLE ONLY public.mentions
 --
 
 ALTER TABLE ONLY public.oauth2_access
-    ADD CONSTRAINT oauth2_access_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.oauth2_clients(id) ON DELETE CASCADE;
+    ADD CONSTRAINT oauth2_access_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.oauth2_clients(id);
+
+
+--
+-- Name: oauth2_access oauth2_access_oauth2_access_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oauth2_access
+    ADD CONSTRAINT oauth2_access_oauth2_access_id_fkey FOREIGN KEY (oauth2_access_id) REFERENCES public.oauth2_access(id);
+
+
+--
+-- Name: oauth2_access oauth2_access_oauth2_authorize_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oauth2_access
+    ADD CONSTRAINT oauth2_access_oauth2_authorize_id_fkey FOREIGN KEY (oauth2_authorize_id) REFERENCES public.oauth2_authorize(id);
+
+
+--
+-- Name: oauth2_access oauth2_access_refresh_token_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oauth2_access
+    ADD CONSTRAINT oauth2_access_refresh_token_id_fkey FOREIGN KEY (refresh_token_id) REFERENCES public.oauth2_refresh(id);
 
 
 --
@@ -5453,13 +5493,6 @@ GRANT ALL ON FUNCTION public.gen_salt(text) TO nerdz;
 --
 
 GRANT ALL ON FUNCTION public.gen_salt(text, integer) TO nerdz;
-
-
---
--- Name: FUNCTION hashtag(message text, hpid bigint, grp boolean, from_u bigint, m_time timestamp without time zone); Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON FUNCTION public.hashtag(message text, hpid bigint, grp boolean, from_u bigint, m_time timestamp without time zone) TO nerdz;
 
 
 --
