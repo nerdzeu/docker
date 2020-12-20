@@ -23,7 +23,7 @@ services:
            max-file: "10"
 
     php:
-      image: nerdzeu/docker-php:1.0.0
+      image: nerdzeu/docker-php:1.0.1
       restart: unless-stopped
       expose:
         - "9000"
@@ -125,7 +125,7 @@ services:
            max-file: "10"
 
     api:
-      image: nerdzeu/nerdz-api:1.0.1
+      image: nerdzeu/nerdz-api:1.0.2
       restart: unless-stopped
       expose:
         - "8080"

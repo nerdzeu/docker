@@ -3057,7 +3057,7 @@ CREATE TABLE public.profiles (
     github character varying(350) DEFAULT ''::character varying NOT NULL,
     skype character varying(350) DEFAULT ''::character varying NOT NULL,
     jabber character varying(350) DEFAULT ''::character varying NOT NULL,
-    yahoo character varying(350) DEFAULT ''::character varying NOT NULL,
+    telegram character varying(350) DEFAULT ''::character varying NOT NULL,
     userscript character varying(128) DEFAULT ''::character varying NOT NULL,
     template smallint DEFAULT 0 NOT NULL,
     dateformat character varying(25) DEFAULT 'd/m/Y'::character varying NOT NULL,
