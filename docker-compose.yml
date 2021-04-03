@@ -23,7 +23,7 @@ services:
            max-file: "10"
 
     php:
-      image: nerdzeu/docker-php:1.0.1
+      image: nerdzeu/docker-php:1.0.2
       restart: unless-stopped
       expose:
         - "9000"
