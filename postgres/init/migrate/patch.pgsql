@@ -1531,6 +1531,10 @@ ALTER TABLE users DROP COLUMN gender;
 ALTER TABLE ONLY public.posts ADD CONSTRAINT posts_unique_to_pid UNIQUE ("to", pid);
 ALTER TABLE ONLY public.groups_posts ADD CONSTRAINT groups_posts_unique_to_pid UNIQUE ("to", pid);
 
+-- yahoo is dead -> telegram
+alter table profiles rename COLUMN yahoo TO telegram;
+update profiles set telegram = '';
+
 -- TODO: https://news.ycombinator.com/item?id=9512912
 -- https://blog.lateral.io/2015/05/full-text-search-in-milliseconds-with-postgresql/
 /*
