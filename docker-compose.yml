@@ -87,24 +87,9 @@ services:
       expose:
         - "8081"
       environment:
-        - CAMO_KEY=YOUR_KEY
+        - CAMO_KEY=WHYYOUSTUPIDCUNTSUCKER
       networks:
         - net
-
-    redis:
-      image: redis:5.0
-      restart: unless-stopped
-      expose:
-        - "6379"
-      volumes:
-        - ./redis/data:/data
-      networks:
-        - net
-      logging:
-        driver: "json-file"
-        options:
-           max-size: "500k"
-           max-file: "10"
 
     api:
       image: nerdzeu/nerdz-api:1.0.2
