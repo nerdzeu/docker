@@ -5,7 +5,7 @@ networks:
 
 services:
     postgres:
-      image: postgres:12.2
+      image: postgres:13.2
       restart: unless-stopped
       expose:
         - "5432"
