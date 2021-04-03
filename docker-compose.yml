@@ -56,7 +56,6 @@ services:
         - api
         - camo
         - apidoc
-        #- nerdzcrush
 
       volumes:
         - ./php/websites:/srv/http
@@ -106,24 +105,6 @@ services:
         options:
            max-size: "500k"
            max-file: "10"
-
-#    nerdzcrush:
-#      image: nerdzeu/docker-nerdzcrush:1.0.0
-#      restart: unless-stopped
-#      expose:
-#        - "9999"
-#      depends_on:
-#        - redis
-#      volumes:
-#        - ./nerdzcrush/mediacrush:/home/mediacrush
-#        - ./nerdzcrush/storage:/home/mediacrush/MediaCrush/storage/
-#      networks:
-#        - net
-#      logging:
-#        driver: "json-file"
-#        options:
-#           max-size: "500k"
-#           max-file: "10"
 
     api:
       image: nerdzeu/nerdz-api:1.0.2
