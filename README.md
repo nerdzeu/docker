@@ -15,7 +15,7 @@ cd docker
 ./autosetup.sh -s 1 -e <email> <domain>
 # e.g. ./autosetup.sh -s 1 -e my@ema.il nerdz.eu
 
-# Do you want to develo locally without using HTTPS
+# Do you want to develop locally without using HTTPS
 ./autosetup.sh -s 0 <domain>
 #e.g ./autosetup.sh -s 0 local.nerdz.eu
 ```
