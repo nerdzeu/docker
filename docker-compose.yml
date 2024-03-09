@@ -92,7 +92,7 @@ services:
         - net
 
     api:
-      image: nerdzeu/nerdz-api:1.0.2
+      image: nerdzeu/nerdz-api:1.0.3
       restart: unless-stopped
       expose:
         - "8080"
