@@ -88,15 +88,6 @@ for vol in ${volumes_mapping//\"}; do
 done
 
 
-echo "[+] Creating a new virtualenv in ./venv"
-if [ ! -d venv ]; then
-    virtualenv -ppython3 venv
-fi
-source venv/bin/activate
-
-echo "[+] Installing docker-compose in a virtualenv..."
-pip install docker-compose==1.25.4
-
 echo "[+] Configuring nginx to use $DOMAIN"
 
 mv nginx/conf.d/nerdz.eu nginx/conf.d/$DOMAIN
